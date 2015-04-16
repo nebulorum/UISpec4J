@@ -168,9 +168,14 @@ public class WindowInterceptorForModalDialogsTest extends WindowInterceptorTestC
       public void run() throws Exception {
         thread = new Thread() {
           public void run() {
-            JDialog dialog = createModalDialog("expected title");
+            final JDialog dialog = createModalDialog("expected title");
             addHideButton(dialog, "OK");
-            dialog.setVisible(true);
+            SwingUtilities.invokeLater(new Runnable() {
+              @Override
+              public void run() {
+                dialog.setVisible(true);
+              }
+            });
           }
         };
         thread.start();
