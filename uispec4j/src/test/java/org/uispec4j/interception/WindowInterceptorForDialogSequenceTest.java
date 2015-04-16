@@ -402,12 +402,17 @@ public class WindowInterceptorForDialogSequenceTest extends WindowInterceptorTes
     checkAssertionError(WindowInterceptor
       .init(new Trigger() {
         public void run() throws Exception {
-          JDialog firstDialog = new JDialog(new JFrame(), "first", true);
+          final JDialog firstDialog = new JDialog(new JFrame(), "first", true);
           firstDialog.setTitle("first");
           JDialog secondDialog = new JDialog(firstDialog, "second", true);
           addShowDialogButton(firstDialog, "show", secondDialog);
           addHideButton(secondDialog, "close");
-          firstDialog.setVisible(true);
+          SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+              firstDialog.setVisible(true);
+            }
+          });
         }
       })
       .processWithButtonClick("show")
